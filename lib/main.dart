@@ -1,11 +1,10 @@
 import 'dart:math';
 
+import 'package:bmi_calculator/info.dart';
 import 'package:flutter/material.dart';
+import 'constants.dart' as constants;
 
 void main() => runApp(App());
-
-const Color blue = Color(0xFF1A4B76);
-const Color yellow = Color(0xFFFFBD2A);
 
 class App extends StatelessWidget {
   @override
@@ -15,21 +14,21 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primaryTextTheme: TextTheme(
           display1: TextStyle(
-            color: blue,
+            color: constants.blue,
           ),
           title: TextStyle(
-            color: yellow,
+            color: constants.yellow,
           ),
         ),
         appBarTheme: AppBarTheme(
-          textTheme: TextTheme(display1: TextStyle(color: yellow)),
-          color: blue,
+          textTheme: TextTheme(display1: TextStyle(color: constants.yellow)),
+          color: constants.blue,
           actionsIconTheme: IconThemeData(
-            color: yellow,
+            color: constants.yellow,
           ),
         ),
         textTheme: TextTheme(
-          display1: TextStyle(color: blue),
+          display1: TextStyle(color: constants.blue),
         ),
       ),
       home: HomeScreen(),
@@ -79,7 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.info_outline),
             onPressed: () {
-              print("Information about BMI.");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => InfoScreen()),
+              );
             },
           )
         ],
@@ -110,8 +112,48 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(4.0),
                       ),
-                      child: FittedBox(
-                        child: Text(bmi.toString()),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            width: double.infinity,
+                            height: 70.0,
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            decoration: BoxDecoration(
+                              color: constants.blue,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "BMI SCORE",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(42.0),
+                            child: FittedBox(
+                              child: Text(bmi.toStringAsFixed(1)),
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              classification(),
+                              style: TextStyle(
+                                fontSize: 23.0,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              setState(() {
+                                showBMI = false;
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -130,8 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     Text(
                       "We need your height and weight in order to determine your BMI score.",
-                      style:
-                          TextStyle(fontSize: 18.0, height: 1.2, color: blue),
+                      style: TextStyle(
+                          fontSize: 18.0, height: 1.2, color: constants.blue),
                     ),
                     SizedBox(height: 16.0),
                     Text(
@@ -139,11 +181,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
-                        color: blue,
+                        color: constants.blue,
                       ),
                     ),
                     SizedBox(height: 8.0),
                     TextField(
+                      keyboardType: TextInputType.number,
                       onChanged: (data) {
                         setState(() {
                           weight = int.parse(data);
@@ -160,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
-                        color: blue,
+                        color: constants.blue,
                       ),
                     ),
                     SizedBox(height: 8.0),
@@ -169,6 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Flexible(
                           flex: 1,
                           child: TextField(
+                            keyboardType: TextInputType.number,
                             onChanged: (data) {
                               setState(() {
                                 heightFeet = int.parse(data);
@@ -184,6 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Flexible(
                           flex: 2,
                           child: TextField(
+                            keyboardType: TextInputType.number,
                             onChanged: (data) {
                               setState(() {
                                 heightInches = int.parse(data);
@@ -210,11 +255,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 calculate();
                               },
-                              color: yellow,
+                              color: constants.yellow,
                               textColor: Colors.white,
-                              splashColor: blue,
+                              splashColor: constants.blue,
                             )
-                          : Offstage(),
+                          : Container(),
                     )
                   ],
                 ),
